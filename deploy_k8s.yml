@@ -6,6 +6,14 @@
       yum:
         name: git
         state: present
+    - name: Copy files to k8s master
+      become: yes
+      copy:
+        src: /var/lib/jenkins/workspace/deploy_k8s/{{item}}
+        dest: /home/cloud_user/deploy/{{item}}
+        owner: cloud_user
+        group: cloud_user
+        mode: '0777'
     - name: Create dojo Namespace
       k8s:
         name: dojo
@@ -15,10 +23,10 @@
     - name: Create a Deployment by reading the definition from a local file
       k8s:
         state: present
-        src: /home/kubernetes-dojo/deployment.yml
+        src: /home/cloud_user/deploy/deployment.yml
         namespace: dojo
     - name: Create a Service object by reading the definition from a file
       k8s:
         state: present
-        src: /home/kubernetes-dojo/service.yml
+        src: /home/cloud_user/deploy/service.yml
         namespace: dojo
