@@ -5,7 +5,7 @@
       become: yes
       yum:
         name: git
-        state: installed
+        state: present
     - name: Install packages if not present
       become: yes
       yum:
