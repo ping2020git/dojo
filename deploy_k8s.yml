@@ -6,14 +6,6 @@
       yum:
         name: git
         state: present
-    - name: Install packages if not present
-      become: yes
-      yum:
-        name: "{{item}}"
-        state: present
-      loop:
-        - pyyaml
-        - k8s
     - name: Create dojo Namespace
       become: yes
       k8s:
