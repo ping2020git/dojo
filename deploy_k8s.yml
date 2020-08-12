@@ -7,7 +7,7 @@
         name: git
         state: present
     - name: Create dojo Namespace
-      become: yes
+#      become: yes
       k8s:
         name: dojo
         api_version: v1
