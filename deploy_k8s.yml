@@ -1,48 +1,41 @@
-
 - name: Deploy Nginx application
-    hosts: 10.10.10.10
-    tasks:
-        - name: Install GIT if not present 
-          become: yes 
-          yum:
-            name: git   
-            state: installed
-        - name: Remove the git clone workspace if present
-          become: yes 
-          delegate_to: localhost
-          file:
-            state: absent
-            path: "/home/kubernetes-dojo/"
-        - name: Clone git repository
-          become: yes 
-          git:
-            repo: ""
-            dest: "/home/kubernetes-dojo/"
-            force: yes
-        - name: Install packages if not present
-          become: yes
-          yum:
-            name: "{{item}}"
-            state: installed
-          loop:
-            - pyyaml
-            - k8s
-        - name: Create dojo Namespace
-          become: yes 
-          k8s:
-            name: dojo
-            api_version: v1
-            kind: Namespace
-            state: present
-        - name: Create a Deployment by reading the definition from a local file
-          become: yes 
-          k8s:
-            state: present
-            src: /home/kubernetes-dojo/deployment.yml
-            namespace: dojo
-        - name: Create a Service object by reading the definition from a file
-          become: yes 
-          k8s:
-            state: present
-            src: /home/kubernetes-dojo/service.yml
-            namespace: dojo
+  hosts: all
+  tasks:
+    - name: Install GIT if not present
+      become: yes
+      yum:
+        name: git
+        state: installed
+      - name: Remove the git clone workspace if present
+        become: yes
+        delegate_to: localhost
+        file:
+          state: absent
+          path: "/home/kubernetes-dojo/"
+      - name: Install packages if not present
+        become: yes
+        yum:
+          name: "{{item}}"
+          state: installed
+        loop:
+          - pyyaml
+          - k8s
+      - name: Create dojo Namespace
+        become: yes
+        k8s:
+          name: dojo
+          api_version: v1
+          kind: Namespace
+          state: present
+      - name: Create a Deployment by reading the definition from a local file
+        become: yes
+        k8s:
+          state: present
+          src: /home/kubernetes-dojo/deployment.yml
+          namespace: dojo
+      - name: Create a Service object by reading the definition from a file
+        become: yes
+        k8s:
+          state: present
+          src: /home/kubernetes-dojo/service.yml
+          namespace: dojo
