@@ -14,6 +14,9 @@
         owner: cloud_user
         group: cloud_user
         mode: '0777'
+      loop:
+        - service.yml
+        - deployment.yml
     - name: Create dojo Namespace
       k8s:
         name: dojo
